@@ -1,0 +1,6 @@
+user: root
+host: localhost
+database: mydb
+password: apple@125
+listen_addr: ":3030"
+signing_key: "password"

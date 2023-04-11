@@ -1,0 +1,141 @@
+---
+openapi: "3.0.2"
+
+info:
+  title: Todo
+  name: ''
+  description: 'Todo GO service'
+
+paths:
+  /v1/todos:
+    get:
+      description: Show the list of todos
+      responses:
+        200:
+          description: List of todos.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TodoResponse'
+        500:
+          description: Internal server error
+    post:
+      description: Insert a todo
+      requestBody:
+        description: Request sent to API for creating a client
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TodoRequest"
+      responses:
+        201:
+          description: todo created successfully.
+        400:
+          description: Bad Request
+        500:
+          description: Internal server error
+  /v1/todos/{todo_id}:
+    parameters:
+      - $ref: "#/components/parameters/cid"
+    get:
+      description: Return a specific todo.
+      responses:
+        200:
+          description: Todo object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TodoResponse'
+        500:
+          description: Internal server error
+    delete:
+      description: Delete a todo.
+      responses:
+        200:
+          description: Success
+        500:
+          description: Internal server error
+    put:
+      summary: Update a todo.
+      requestBody:
+        description: Request sent to API for updating a todo
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TodoRequest"
+      responses:
+        200:
+          description: Updated todo.
+        400:
+          description: Bad Request
+        500:
+          description: Internal server error
+
+components:
+  schemas:
+    TodoRequest:
+      type: object
+      title: Todo request
+      required:
+        - task
+      properties:
+        task:
+          type: string
+          description: A brief description of the task you are going todo.
+        done:
+          type: boolean
+          description: Is the task finished?
+        category:
+          type: string
+          description: category of the task.
+          enum:
+            - work
+            - home
+        priority:
+          type: string
+          description: priority of the task.
+          enum:
+            - low
+            - medium
+            - high
+    TodoResponse:
+      type: object
+      title: Todo response
+      required:
+        - task
+      properties:
+        task:
+          type: string
+          description: A brief description of the task you are going todo.
+        category:
+          type: string
+          description: category of the task.
+          enum:
+            - work
+            - home
+        priority:
+          type: string
+          description: priority of the task.
+          enum:
+            - low
+            - medium
+            - high
+        created_at:
+          type: string
+          description: Timestamp of the todo creation time in RFC-3339 format.
+        completed_at:
+          type: string
+          description: Timestamp of the todo completion time in RFC-3339 format.
+
+  parameters:
+    all:
+      name: all
+      in: query
+      description: If all is true, the server will list all the todos irrespective of whether a todo is completed or not
+      required: false
+      schema:
+        type: string
